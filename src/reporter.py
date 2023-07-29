@@ -27,7 +27,7 @@ class Reporter:
                 self._logger.info(f"Got {len(contents)} contents from {content_provider.name()}")
                 for content in contents:
                     report = self._llm_chain(content)
-                    reports.append(report)
+                    reports.append({"report" : report})
             
             except requests.exceptions.HTTPError as e:
                 self._logger.error(f"Error getting content from {content_provider.name()}: {e}")

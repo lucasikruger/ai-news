@@ -2,6 +2,7 @@ from src.content_provider import ContentProvider
 from src.content_provider import PapersWithCodeContentProvider
 from unittest import TestCase, mock
 import requests
+import json
 class TestContentProvider(TestCase):
 
 	def test_create_papers_with_code_content_provider(self):
@@ -11,7 +12,7 @@ class TestContentProvider(TestCase):
 	def test_name_papers_with_code_content_provider(self):
 		contentProvider = PapersWithCodeContentProvider()
 		self.assertEqual(contentProvider.name(), "PapersWithCodeContentProvider")
-		
+
 	@mock.patch('requests.get')
 	def test_get_content_error(self, mock_get):
 		mock_get.return_value.status_code = 500  # Simulate a server error
@@ -71,7 +72,7 @@ class TestContentProvider(TestCase):
 			"abstract": "",
 			"arxiv_url": "",
 		}
-
+		expected_content = {"paper" : json.dumps(expected_content)}
 		self.assertEqual(content[0], expected_content)
 
 
@@ -133,5 +134,5 @@ class TestContentProvider(TestCase):
 			"abstract": "This is the full abstract of the paper.",  # Abstract from individual paper's page
 			"arxiv_url": "https://arxiv.org/abs/example",  # arXiv URL from individual paper's page
 		}
-
+		expected_content = {"paper" : json.dumps(expected_content)}
 		self.assertEqual(content[0], expected_content)

@@ -1,0 +1,57 @@
+Este es un paper de IA en tendencia en formato JSON
+
+{paper}
+
+Escríbeme un post informativo para postear en redes. Debe ser en español.
+
+Por favor, sigue esta plantilla:
+
+```
+<Una oración de introducción, por ejemplo, 🚨 ¡Alerta de nuevo paper! ...><tres emojis describiendo el paper>
+
+<otros ejemplos (usa solo uno, y crea otros si lo deseas: 🎉 ¡Celebremos un nuevo avance en IA! 🚀🔍🌟
+
+🔥 ¡Increíble hallazgo en el mundo de la Inteligencia Artificial! 📄🔬🔍
+
+💥 ¡No te pierdas este paper destacado sobre IA! 📄🚀🔍
+
+🚨 ¡Importante descubrimiento en IA! 📄🔍🌟
+
+💡 ¡Nuevo paper revolucionario en el campo de la Inteligencia Artificial! 📄🚀🔍
+
+📢 ¡Atención a esta investigación destacada en el mundo de la IA! 📄🔬🌟)
+
+<Resumen breve del paper, máximo dos oraciones>
+
+
+<Lista de viñetas con puntos importantes del resumen, por ejemplo
+✅ punto1
+✅ punto2
+✅ punto3
+>
+
+
+🔗 GitHub: <GITHUB_LINK>
+🔗 Arvix: <ARVIX_LINK>
+
+
+#ia #codigolibre #cienciadedatos #programacion #python #aprendizajeprofundo
+#ai #ds #ml #llms #opensource #datascience #machinelearning #programming #python #deeplearning #nlp
+```
+No agregues hashtag
+Ejemplo 1:
+```
+🚨 Nuevo paper destacado: Segmentando Todo en Todas Partes al Mismo Tiempo 🤖🎨📷
+
+A pesar de la creciente demanda de sistemas de IA interactivos, ha habido pocas investigaciones exhaustivas sobre la interacción humano-IA en el entendimiento visual, como la segmentación. Inspirado en el desarrollo de interfaces universales basadas en indicaciones para LLMs, este paper presenta SEEM, un modelo interactivo y promptable para segmentar todo en todas partes al mismo tiempo en una imagen. SEEM cumple con cuatro criterios: 
+
+✅ Versatilidad: al introducir un motor de indicaciones versátil para diferentes tipos de indicaciones, incluyendo puntos, cajas, garabatos, máscaras, textos y regiones referenciadas de otra imagen. 
+✅ Composicionalidad: mediante el aprendizaje de un espacio visual-semántico conjunto para indicaciones visuales y textuales para componer consultas sobre la marcha para la inferencia, como se muestra en la Figura 1.
+✅ Interactividad: incorporando indicaciones de memoria aprendibles para retener información del historial de diálogo a través de atención cruzada guiada por máscaras.
+✅ Conciencia semántica: utilizando un codificador de texto para codificar consultas de texto y etiquetas de máscara para la segmentación con vocabulario abierto.
+
+🔗 GitHub: https://github.com/ux-decoder/segment-everything-everywhere-all-at-once
+🔗 Arvix: https://arxiv.org/pdf/2304.06718v2.pdf
+```
+
+Agrega emoticonos significativos (emoji) al post, solo dos o tres, como en los ejemplos. Después de haber creado un post exitosamente, puedes detenerte.

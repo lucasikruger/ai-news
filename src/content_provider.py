@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
+import json
 class ContentProvider:
     def __init__(self):
         pass
@@ -76,7 +76,7 @@ class PapersWithCodeContentProvider(ContentProvider):
 			    "arxiv_url": arxiv_url
             }
         
-
+        paper_dict = {"paper" : json.dumps(paper_dict)}
         
         return paper_dict
     
