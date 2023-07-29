@@ -136,3 +136,4 @@ class TestContentProvider(TestCase):
 		}
 		expected_content = {"paper" : json.dumps(expected_content)}
 		self.assertEqual(content[0], expected_content)
+

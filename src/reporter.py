@@ -2,6 +2,7 @@ from langchain.chains.base import Chain
 from src.content_provider import ContentProvider
 from typing import List
 import requests
+import json
 import logging
 class Reporter:
     def __init__(self, content_providers: List[ContentProvider], llm_chain: Chain, logger: logging.Logger = None):
@@ -23,12 +24,12 @@ class Reporter:
         for content_provider in self._content_providers:
             try:
                 contents = content_provider.get_content()
-                
                 self._logger.info(f"Got {len(contents)} contents from {content_provider.name()}")
                 for content in contents:
-                    report = self._llm_chain(content)
-                    reports.append({"report" : report})
-            
+                    post = self._llm_chain.run(content)
+                    report = {"report" : {"post": post, 'content_provider': content_provider.name()}}
+                    reports.append(report)
+                    self._logger.info(json.dumps(report))
             except requests.exceptions.HTTPError as e:
                 self._logger.error(f"Error getting content from {content_provider.name()}: {e}")
                 self._logger.info(f"Got 0 contents from {content_provider.name()}")

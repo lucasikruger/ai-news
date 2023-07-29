@@ -8,6 +8,7 @@ from src.content_provider import ContentProvider, PapersWithCodeContentProvider
 from typing import Dict
 import requests
 import logging
+import json
 class TestReporter(TestCase):
 
     def get_one_content_provider_in_a_list(self):
@@ -85,16 +86,17 @@ class TestReporter(TestCase):
 
 
     @patch('src.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content"}])
-    def test_report_function_getting_one_post(self, mock_get_content):
+    @patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+    def test_report_function_getting_one_post(self, mock_name, mock_get_content):
         logger = self.create_logger("test_logger")     
         content_provider = ContentProvider()
         
         def inputs_to_outputs(inputs: Dict[str, str]) -> Dict[str, str]:
-            return {"Post": inputs.pop("test_content") + " test"}
+            return {"post": inputs.pop("test_content") + " test"}
 
         llm_chain = FakeChain(
             expected_inputs=["test_content"],
-            expected_outputs=["Post"],
+            expected_outputs=["post"],
             inputs_to_outputs=inputs_to_outputs,
         )
 
@@ -104,21 +106,22 @@ class TestReporter(TestCase):
 
         result = reporter.report() 
 
-        self.assertEqual(result, [{"Post": "content test"}])
+        self.assertEqual(result, [{'report': {'post': 'content test', 'content_provider': content_provider.name()}}])
 
     @patch('src.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content1"}, {"test_content":"content2"}])
-    def test_report_function_getting_two_post(self, mock_get_content):
+    @patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+    def test_report_function_getting_two_post(self, mock_name, mock_get_content):
         
         
         logger = self.create_logger("test_logger")
         content_provider = ContentProvider()
 
         def inputs_to_outputs(inputs: Dict[str, str]) -> Dict[str, str]:
-            return {"Post": inputs.pop("test_content") + " test"}
+            return {"post": inputs.pop("test_content") + " test"}
 
         llm_chain = FakeChain(
             expected_inputs=["test_content"],
-            expected_outputs=["Post"],
+            expected_outputs=["post"],
             inputs_to_outputs=inputs_to_outputs,
         )
 
@@ -132,13 +135,14 @@ class TestReporter(TestCase):
         self.assertEqual(
             result,
             [
-                {"Post": "content1 test"},
-                {"Post": "content2 test"}
+                {'report': {'post': 'content1 test', 'content_provider': content_provider.name()}},
+                {'report': {'post': 'content2 test', 'content_provider': content_provider.name()}}
             ]
         )
 
     @patch('src.content_provider.ContentProvider.get_content', side_effect=[[{"test_content":"content1"}], [{"test_content":"content2"}]])
-    def test_report_function_from_two_content_providers(self, mock_get_content):
+    @patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+    def test_report_function_from_two_content_providers(self,mock_name, mock_get_content):
         
         
         logger = self.create_logger("test_logger")
@@ -147,11 +151,11 @@ class TestReporter(TestCase):
         content_provider2 = ContentProvider()
 
         def inputs_to_outputs(inputs: Dict[str, str]) -> Dict[str, str]:
-            return {"Post": inputs.pop("test_content") + " test"}
+            return {"post": inputs.pop("test_content") + " test"}
 
         llm_chain = FakeChain(
             expected_inputs=["test_content"],
-            expected_outputs=["Post"],
+            expected_outputs=["post"],
             inputs_to_outputs=inputs_to_outputs,
         )
 
@@ -165,8 +169,8 @@ class TestReporter(TestCase):
         self.assertEqual(
             result,
             [
-                {"Post": "content1 test"},
-                {"Post": "content2 test"}
+                {'report': {'post': 'content1 test', 'content_provider': content_provider1.name()}},
+                {'report': {'post': 'content2 test', 'content_provider': content_provider2.name()}}
             ]
         )
 
@@ -196,13 +200,13 @@ class TestReporter(TestCase):
 
         content_providers = self.get_one_content_provider_in_a_list()
         
-        llm_chain = FakeChain(output= {"Post": "This is a test post"}, expected_inputs=["test_content"])
+        llm_chain = FakeChain(output= {"post": "This is a test post"}, expected_inputs=["test_content"])
 
         reporter = Reporter(content_providers, llm_chain, logger)
-
+        
         result = reporter.report() 
-        calls = [call("Starting reporting"), call(f"Got 1 contents from {content_providers[0].name()}"), call("Finished reporting")]
-
+        calls = [call("Starting reporting"), call(f"Got 1 contents from {content_providers[0].name()}"), call(json.dumps({"report" : {"post": "This is a test post", 'content_provider': content_providers[0].name()}})), call("Finished reporting")]
+        
         mock_info.assert_has_calls(calls, any_order=False)
 
 
