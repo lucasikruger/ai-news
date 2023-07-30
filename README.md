@@ -1,4 +1,11 @@
+![Idea interface](misc/interface_idea.png)
+
+
+
+
 Quiero crear un sistema inspirado en el guru de linkedin-gpt
+
+https://github.com/FrancescoSaverioZuppichini/LinkedInGPT
 
 La llamare ai-news
 

@@ -10,6 +10,13 @@ import hashlib
 class Reporter:
     def __init__(self, content_providers: List[ContentProvider], llm_chain: Chain, logger: logging.Logger, data_storage: DataStorage):
 
+        self.validate_inputs_types(content_providers, llm_chain, logger, data_storage)
+        self._content_providers = content_providers
+        self._llm_chain = llm_chain
+        self._logger = logger
+        self._data_storage = data_storage
+
+    def validate_inputs_types(self, content_providers, llm_chain, logger, data_storage):
         if not isinstance(llm_chain, Chain):
             raise TypeError('llm_chain must be an instance of Chain')
         if not isinstance(content_providers, list) or len(content_providers) == 0:
@@ -20,10 +27,8 @@ class Reporter:
             raise TypeError('logger must be an instance of logging.Logger')
         if not isinstance(data_storage, DataStorage):
             raise TypeError('data_storage must be an instance of DataStorage')
-        self._content_providers = content_providers
-        self._llm_chain = llm_chain
-        self._logger = logger
-        self._data_storage = data_storage
+        
+        
     def get_timestamp(self):
         return int(datetime.utcnow().timestamp())
     def create_id(self,json_obj):
@@ -33,26 +38,31 @@ class Reporter:
         self._logger.info('Starting reporting')
         all_reports = []
         for content_provider in self._content_providers:
-            reports = []
-            try:
-                contents = content_provider.get_content()
-                self._logger.info(f'Got {len(contents)} contents from {content_provider.name()}')
-                for content in contents:
-                    content_str = json.dumps(content)
-                    id = self.create_id(json.loads(content_str))
-                    if not self._data_storage.exists(content_provider.name(), id):
-                            
-                        post = self._llm_chain.run(content)
-                        report = {'content': json.loads(content_str),'report' : {'post': post, 'content_provider': content_provider.name()},'id': id, 'timestamp': self.get_timestamp()}
-                        reports.append(report)
-                        self._logger.info(json.dumps(report))
-                    else:
-                        self._logger.info(f'Content {json.loads(content_str)} already exists in {content_provider.name()}')
-            except requests.exceptions.HTTPError as e:
-                self._logger.error(f'Error getting content from {content_provider.name()}: {e}')
-                self._logger.info(f'Got 0 contents from {content_provider.name()}')
+            reports = self.get_reports_from_content_provider(content_provider)
             all_reports.extend(reports)
             if len(reports) > 0:
                 self._data_storage.save_reports(content_provider.name(), reports)
         self._logger.info('Finished reporting')
         return all_reports
+
+
+
+    def get_reports_from_content_provider(self, content_provider):
+        reports = []
+        try:
+            contents = content_provider.get_content()
+            self._logger.info(f'Got {len(contents)} contents from {content_provider.name()}')
+            for content in contents:
+                content_str = json.dumps(content)
+                id = self.create_id(json.loads(content_str))
+                if not self._data_storage.exists(content_provider.name(), id):
+                    post = self._llm_chain.run(content)
+                    report = {'content': json.loads(content_str),'report' : {'post': post, 'content_provider': content_provider.name()},'id': id, 'timestamp': self.get_timestamp()}
+                    reports.append(report)
+                    self._logger.info(json.dumps(report))
+                else:
+                    self._logger.info(f'Content {json.loads(content_str)} already exists in {content_provider.name()}')
+        except requests.exceptions.HTTPError as e:
+            self._logger.error(f'Error getting content from {content_provider.name()}: {e}')
+            self._logger.info(f'Got 0 contents from {content_provider.name()}')
+        return reports
