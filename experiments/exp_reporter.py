@@ -9,6 +9,7 @@ from langchain.chains import LLMChain
 import logging
 from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
+from src.data_storage import DataStorage
 load_dotenv("../.env")
 
 
@@ -55,13 +56,9 @@ def main():
     contentProvider = PapersWithCodeContentProvider()
 
     # Reporter
-    reporter = Reporter(content_providers=[contentProvider], llm_chain=chain, logger=logger)
+    data_storage = DataStorage("data")
+    reporter = Reporter(content_providers=[contentProvider], llm_chain=chain, logger=logger, data_storage=data_storage)
     reports = reporter.report()
-
-    logger.info(f"Reports: {len(reports)}\n\n")
-    for report in reports:
-        print(report)
-        logger.info(f"Report: \n{report}")
 
 if __name__ == "__main__":
     main()
