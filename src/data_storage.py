@@ -1,4 +1,4 @@
-from src.content_provider import ContentProvider
+from src.content_provider.content_provider import ContentProvider
 from src.tiny_db_backend import TinyDBBackend
 from typing import List, Dict
 from datetime import datetime

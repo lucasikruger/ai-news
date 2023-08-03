@@ -1,5 +1,6 @@
 from langchain.chains.base import Chain
-from src.content_provider import ContentProvider
+from src.content_provider.content_provider import ContentProvider
+from src.content_provider.papers_with_code_content_provider import PapersWithCodeContentProvider
 from src.data_storage import DataStorage
 from typing import List
 import requests
@@ -57,15 +58,14 @@ class Reporter:
             contents = content_provider.get_content()
             self._logger.info(f'Got {len(contents)} contents from {content_provider.name()}')
             for content in contents:
-                content_str = json.dumps(content)
-                id = self.create_id(json.loads(content_str))
+                id = self.create_id(content)
                 if not self._data_storage.exists(content_provider.name(), id):
-                    post = self._llm_chain.run(content)
-                    report = {'content': json.loads(content_str),'report' : {'post': post, 'content_provider': content_provider.name()},'id': id, 'timestamp': self.get_timestamp()}
+                    post = self._llm_chain.run(content.copy())
+                    report = {'content': content, 'report': {'post': post, 'content_provider': content_provider.name()}, 'id': id, 'timestamp': self.get_timestamp()}
                     reports.append(report)
                     self._logger.info(json.dumps(report))
                 else:
-                    self._logger.info(f'Content {json.loads(content_str)} already exists in {content_provider.name()}')
+                    self._logger.info(f'Content {content} already exists in {content_provider.name()}')
         except requests.exceptions.HTTPError as e:
             self._logger.error(f'Error getting content from {content_provider.name()}: {e}')
             self._logger.info(f'Got 0 contents from {content_provider.name()}')

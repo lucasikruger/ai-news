@@ -1,5 +1,5 @@
-from src.content_provider import ContentProvider
-from src.content_provider import PapersWithCodeContentProvider
+from src.content_provider.content_provider import ContentProvider
+from src.content_provider.papers_with_code_content_provider import PapersWithCodeContentProvider
 from src.data_storage import DataStorage
 from src.db_backend_interface import DatabaseBackend
 from src.tiny_db_backend import TinyDBBackend

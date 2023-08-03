@@ -1,9 +1,9 @@
-from src.content_provider import ContentProvider
-from src.content_provider import PapersWithCodeContentProvider
+from src.content_provider.content_provider import ContentProvider
+from src.content_provider.papers_with_code_content_provider import PapersWithCodeContentProvider
 from unittest import TestCase, mock
 import requests
 import json
-class TestContentProvider(TestCase):
+class TestPapersWithCodeContentProvider(TestCase):
 
 	def test_create_papers_with_code_content_provider(self):
 		contentProvider = PapersWithCodeContentProvider()

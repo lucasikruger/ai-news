@@ -1,14 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-class ContentProvider:
-    def __init__(self):
-        pass
-    def name(self):
-        pass
-    def get_content(self):
-        pass
-    
+from src.content_provider.content_provider import ContentProvider
 class PapersWithCodeContentProvider(ContentProvider):
     def __init__(self):
         super().__init__()

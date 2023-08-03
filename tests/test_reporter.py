@@ -4,7 +4,8 @@ import unittest
 from unittest import TestCase
 from unittest.mock import call, patch
 from src.reporter import Reporter
-from src.content_provider import ContentProvider, PapersWithCodeContentProvider
+from src.content_provider.content_provider import ContentProvider
+from src.content_provider.papers_with_code_content_provider import PapersWithCodeContentProvider
 from typing import Dict
 import requests
 import logging
@@ -103,8 +104,8 @@ class TestReporter(TestCase):
 			reporter = Reporter(content_providers, llm_chain, logger, data_storage)
 
 
-	@patch('src.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content"}])
-	@patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+	@patch('src.content_provider.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content"}])
+	@patch('src.content_provider.content_provider.ContentProvider.name', return_value="test_content_provider")
 	@patch('src.reporter.Reporter.get_timestamp', return_value=1000)
 	def test_report_function_getting_one_post(self,mock_time, mock_name, mock_get_content):
 		logger = self.create_logger("test_logger")     
@@ -129,8 +130,8 @@ class TestReporter(TestCase):
 		self.assertEqual(result, [{'content':{'test_content':'content'},'report': {'post': 'content test', 'content_provider': content_provider.name()},'id':self.create_id({"test_content":"content"}), 'timestamp':1000}])
 
 
-	@patch('src.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content1"}, {"test_content":"content2"}])
-	@patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+	@patch('src.content_provider.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content1"}, {"test_content":"content2"}])
+	@patch('src.content_provider.content_provider.ContentProvider.name', return_value="test_content_provider")
 	@patch('src.reporter.Reporter.get_timestamp', return_value=1000)
 	def test_report_function_getting_two_post(self, mock_time,mock_name, mock_get_content):
 		
@@ -165,8 +166,8 @@ class TestReporter(TestCase):
 			]
 		)
 
-	@patch('src.content_provider.ContentProvider.get_content', side_effect=[[{"test_content":"content1"}], [{"test_content":"content2"}]])
-	@patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+	@patch('src.content_provider.content_provider.ContentProvider.get_content', side_effect=[[{"test_content":"content1"}], [{"test_content":"content2"}]])
+	@patch('src.content_provider.content_provider.ContentProvider.name', return_value="test_content_provider")
 	@patch('src.reporter.Reporter.get_timestamp', return_value=1000)
 	def test_report_function_from_two_content_providers(self,mock_time,mock_name, mock_get_content):
 		
@@ -223,8 +224,8 @@ class TestReporter(TestCase):
 
 
 	@patch('logging.Logger.info')
-	@patch('src.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content"}])
-	@patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+	@patch('src.content_provider.content_provider.ContentProvider.get_content', return_value=[{"test_content":"content"}])
+	@patch('src.content_provider.content_provider.ContentProvider.name', return_value="test_content_provider")
 	@patch('src.reporter.Reporter.get_timestamp', return_value=1000)
 	def test_report_logs_content_provider_start_content_report_and_finish(self,mock_time, mock_name, mock_get_content, mock_info):
 		logger = self.create_logger('test_logger')
@@ -245,7 +246,7 @@ class TestReporter(TestCase):
 	@patch('logging.Logger.error')
 	@patch('logging.Logger.info')
 	@patch('requests.get')
-	@patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+	@patch('src.content_provider.content_provider.ContentProvider.name', return_value="test_content_provider")
 	def test_report_logs_content_provider_start_fail_and_finish(self,mock_name, mock_get, mock_info, mock_error):
 		logger = self.create_logger('test_logger')
 		mock_get.return_value.status_code = 500  
@@ -279,8 +280,8 @@ class TestReporter(TestCase):
 		with self.assertRaises(TypeError):
 			reporter = Reporter(content_providers, llm_chain, logger, data_storage)
 
-	@patch('src.content_provider.ContentProvider.get_content', side_effect=[[{"test_content":"content1"}], [{"test_content":"content2"}]])
-	@patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+	@patch('src.content_provider.content_provider.ContentProvider.get_content', side_effect=[[{"test_content":"content1"}], [{"test_content":"content2"}]])
+	@patch('src.content_provider.content_provider.ContentProvider.name', return_value="test_content_provider")
 	@patch('src.reporter.Reporter.get_timestamp', return_value=1000)
 	def test_report_save_on_db(self,mock_time,mock_name, mock_get_content):
 		
@@ -317,8 +318,8 @@ class TestReporter(TestCase):
 
 		self.assertEqual(db.get(), items)
 
-	@patch('src.content_provider.ContentProvider.get_content', side_effect=[[{"test_content":"content1"}], [{"test_content":"content2"}],[{"test_content":"content1"}], [{"test_content":"content2"}]])
-	@patch('src.content_provider.ContentProvider.name', return_value="test_content_provider")
+	@patch('src.content_provider.content_provider.ContentProvider.get_content', side_effect=[[{"test_content":"content1"}], [{"test_content":"content2"}],[{"test_content":"content1"}], [{"test_content":"content2"}]])
+	@patch('src.content_provider.content_provider.ContentProvider.name', return_value="test_content_provider")
 	@patch('src.reporter.Reporter.get_timestamp', return_value=1000)
 	def test_report_already_saved_on_db(self,mock_time,mock_name, mock_get_content):
 		
