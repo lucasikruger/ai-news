@@ -28,12 +28,16 @@ class Reporter:
         if not isinstance(data_storage, DataStorage):
             raise TypeError('data_storage must be an instance of DataStorage')
         
-        
+
     def get_timestamp(self):
         return int(datetime.utcnow().timestamp())
+    
+
     def create_id(self,json_obj):
         json_str = json.dumps(json_obj, sort_keys=True) # Sort keys to ensure consistent ordering
         return hashlib.sha256(json_str.encode()).hexdigest()
+    
+
     def report(self):
         self._logger.info('Starting reporting')
         all_reports = []

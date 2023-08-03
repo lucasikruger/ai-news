@@ -23,3 +23,5 @@ Puede tener varios content providers, a los que les preguntara cada tanto cual e
 - el broadcaster: el tomara ciertos posts y se encargara de distribuirlos.
 
 - news-pipeline: conocera a los demas y ayudara
+
+
